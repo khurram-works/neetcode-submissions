@@ -1,0 +1,37 @@
+from typing import List
+
+class Solution:
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
+        # Make sure nums1 is the smaller array
+        if len(nums1) > len(nums2):
+            nums1, nums2 = nums2, nums1
+
+        m, n = len(nums1), len(nums2)
+        total = m + n
+        half = (total + 1) // 2
+
+        left = 0
+        right = m
+        INF = float('inf')
+
+        while left <= right:
+            cut1 = (left + right) // 2
+            cut2 = half - cut1
+
+            left1  = nums1[cut1 - 1] if cut1 > 0 else -INF
+            right1 = nums1[cut1]     if cut1 < m else INF
+            left2  = nums2[cut2 - 1] if cut2 > 0 else -INF
+            right2 = nums2[cut2]     if cut2 < n else INF
+
+            if left1 <= right2 and left2 <= right1:
+                if total % 2 == 1:
+                    return max(left1, left2)
+                else:
+                    return (max(left1, left2) + min(right1, right2)) / 2
+            elif left1 > right2:
+                right = cut1 - 1
+            else:
+                left = cut1 + 1
+
+        return 0.0 
+
